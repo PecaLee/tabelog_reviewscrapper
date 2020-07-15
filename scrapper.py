@@ -77,5 +77,6 @@ def get_reviews():
             {"title": title, "rating": rating, "comment": comment})
 
     print("review scrapping done.")
+    driver.close()
 
     return review_details
