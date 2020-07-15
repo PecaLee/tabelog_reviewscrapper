@@ -3,21 +3,23 @@ from bs4 import BeautifulSoup
 import time
 
 path = "..\chromedriver\chromedriver.exe"
-URL = "https://tabelog.com/tokyo/A1301/A130101/13110478/dtlrvwlst/"
+URL = input("input tabelog review URL : ")
 tabelog = "https://tabelog.com"
+
+# test link https://tabelog.com/tokyo/A1301/A130101/13110478/dtlrvwlst/
 
 driver = webdriver.Chrome(path)
 
 
-def get_html():
-    driver.get(URL)
+def get_html(url):
+    driver.get(url)
     source = driver.page_source
     soup = BeautifulSoup(source, "lxml")
     return soup
 
 
 def max_page():
-    soup = get_html()
+    soup = get_html(URL)
     try:
         find_pagination = soup.find("ul", class_="c-pagination__list")
         find_pages = find_pagination.find_all("li")
@@ -29,7 +31,6 @@ def max_page():
 
     if pages != None:
         del pages[-1]
-    driver.close()
     return pages
 
 
@@ -46,4 +47,17 @@ def load_page():
     return page_urls
 
 
-print(load_page())
+def get_post_url():
+    page_urls = load_page()
+    post_urls = []
+    for num, page in enumerate(page_urls):
+        soup = get_html(page)
+        find_post_urls = soup.find_all("div", class_="rvw-item")
+        print(f"{num + 1}page done")
+        for post in find_post_urls:
+            post_url = post.get("data-detail-url")
+            post_urls.append(tabelog + post_url)
+    return post_urls
+
+
+print(len(get_post_url()))
