@@ -60,4 +60,21 @@ def get_post_url():
     return post_urls
 
 
-print(len(get_post_url()))
+def get_reviews():
+    review_pages = get_post_url()
+    review_details = []
+    for review in review_pages:
+        soup = get_html(review)
+        rating = soup.find(
+            "b", class_="c-rating-v2__val c-rating-v2__val--strong")
+        rating = rating.text
+        comment = soup.find("div", class_="rvw-item__rvw-comment")
+        comment = comment.find("p").text
+        title = soup.find("p", class_="rvw-item__title")
+        if title != None:
+            title = title.text
+
+        review_details.append(
+            {"title": title, "rating": rating, "comment": comment})
+
+    return review_details
