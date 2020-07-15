@@ -1,6 +1,5 @@
 from selenium import webdriver
 from bs4 import BeautifulSoup
-import time
 
 path = "..\chromedriver\chromedriver.exe"
 URL = input("input tabelog review URL : ")
