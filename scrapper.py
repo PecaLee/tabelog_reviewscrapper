@@ -76,4 +76,6 @@ def get_reviews():
         review_details.append(
             {"title": title, "rating": rating, "comment": comment})
 
+    print("review scrapping done.")
+
     return review_details
