@@ -1,28 +1,12 @@
+# -*- coding: utf-8 -*-
 from scrapper import get_reviews
 from save import save_to_file
-from mecab import text_parsing
+from wordclouding import tabelog_wordcloud
+from make_dict import make_dict
 
 
 data = get_reviews()
-
-
-def comment_datas(data):
-    comment_datas = []
-    for dic in data:
-        comment_datas.append(list(dic.values())[-1])
-    return comment_datas
-
-
-def wordsNVA(data):
-    NVA = []
-    for nva in data:
-        parsed = text_parsing(nva)
-        for word in parsed:
-            NVA.append(word)
-    return NVA
-
-
-wording = wordsNVA(comment_datas(data))
-
-
-# save_to_file(data)
+# 워드클라우드로 표현
+tabelog_wordcloud(make_dict(data))
+# 크롤링한 리뷰정보를 스프레드시트로 저장
+save_to_file(data)
