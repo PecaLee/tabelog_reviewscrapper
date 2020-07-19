@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 import matplotlib.pyplot as plt
-from wordcloud import WordCloud
+from PIL import Image
+import numpy
+from wordcloud import WordCloud, ImageColorGenerator
+
+mask = numpy.array(Image.open("watermark.jpg"))
+image_colors = ImageColorGenerator(mask)
 
 
 def remove_word_from_dict(words_counted):
@@ -24,10 +29,12 @@ def tabelog_wordcloud(words_counted):
         width=1200,
         height=1200,
         background_color="white",
+        mask=mask,
     )
     wordcloud = wordcloud.generate_from_frequencies(keywords)
 
-    plt.figure()
-    plt.imshow(wordcloud, interpolation="bilinear")
+    plt.figure(figsize=(10, 10))
+    plt.imshow(wordcloud.recolor(color_func=image_colors),
+               interpolation="bilinear")
     plt.axis("off")
     plt.show()
