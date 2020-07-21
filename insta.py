@@ -50,9 +50,9 @@ def get_html(url):
         time.sleep(1)
 
     recent_image_div = driver.find_element_by_css_selector(
-        ".PdwC2,.fXiEu,.s2MYR .KL4Bh img")
+        ".M9sTE.L_LMM.JyscU.ePUX4")
 
-    print(recent_image_div.get_attribute('innerHTML'))
+    return recent_image_div.get_attribute('innerHTML')
 
 
 '''
