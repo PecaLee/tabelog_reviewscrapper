@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
 from bs4 import BeautifulSoup
+from typing import Counter
 
 path = "..\chromedriver\chromedriver.exe"
 URL = "https://www.instagram.com/accounts/login/?source=auth_switcher"
@@ -16,7 +17,7 @@ keyword = "#" + keyword
 print(f"fetching {keyword}")
 
 
-def get_html(url):
+def get_first_recent_post(url):
     driver.get(url)
     time.sleep(3)
     username = driver.find_element_by_name("username")
@@ -49,16 +50,39 @@ def get_html(url):
         next_btn.click()
         time.sleep(1)
 
-    recent_image_div = driver.find_element_by_css_selector(
-        ".M9sTE.L_LMM.JyscU.ePUX4")
 
-    return recent_image_div.get_attribute('innerHTML')
+def listing_post():
+    get_first_recent_post(URL)
+    how_much = input("how much do you scraping? :")
+    next_btn = driver.find_element_by_css_selector(
+        "._65Bje,.coreSpriteRightPaginationArrow")
+    hashtag_list = []
+
+    for n in range(0, int(how_much)):
+        recent_image_div = driver.find_element_by_css_selector(
+            ".M9sTE.L_LMM.JyscU.ePUX4")
+        post_html = recent_image_div.get_attribute('outerHTML')
+        soup = BeautifulSoup(post_html, "lxml")
+        try:
+            image_alt = soup.find("div", class_="KL4Bh")
+            image_alt = image_alt.find("img").get("alt")
+            text = soup.find("div", class_="C4VMK")
+            text = text.select_one("h2 ~ span")
+            text = text.find_all("a")
+            for t in text:
+                hashtag_list.append(t.text)
+        except:
+            pass
+        next_btn.click()
+        time.sleep(1)
+
+    return hashtag_list
 
 
-'''
-    source = driver.page_source
-    soup = BeautifulSoup(source, "lxml")
-    return soup
-'''
+def make_dict_for_insta():
+    post_list = listing_post()
+    count = Counter(post_list)
+    words_counted = count.most_common()
+    words_counted = dict(tuple(words_counted))
 
-print(get_html(URL))
+    return words_counted
