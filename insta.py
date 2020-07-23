@@ -45,7 +45,7 @@ def get_first_recent_post(url):
         ".eLAPa")
     first_click.click()
     next_btn = driver.find_element_by_css_selector(
-        "._65Bje,.coreSpriteRightPaginationArrow")
+        "._65Bje.coreSpriteRightPaginationArrow")
     for n in range(0, 9):
         next_btn.click()
         time.sleep(1)
@@ -55,26 +55,34 @@ def listing_post():
     get_first_recent_post(URL)
     how_much = input("how much do you scraping? :")
     next_btn = driver.find_element_by_css_selector(
-        "._65Bje,.coreSpriteRightPaginationArrow")
+        "._65Bje.coreSpriteRightPaginationArrow")
     hashtag_list = []
+    scraped = 1
 
-    for n in range(0, int(how_much)):
-        recent_image_div = driver.find_element_by_css_selector(
-            ".M9sTE.L_LMM.JyscU.ePUX4")
-        post_html = recent_image_div.get_attribute('outerHTML')
-        soup = BeautifulSoup(post_html, "lxml")
-        try:
-            image_alt = soup.find("div", class_="KL4Bh")
-            image_alt = image_alt.find("img").get("alt")
-            text = soup.find("div", class_="C4VMK")
-            text = text.select_one("h2 ~ span")
-            text = text.find_all("a")
-            for t in text:
-                hashtag_list.append(t.text)
-        except:
-            pass
-        next_btn.click()
-        time.sleep(1)
+    try:
+        for n in range(0, int(how_much)):
+            recent_image_div = driver.find_element_by_css_selector(
+                ".M9sTE.L_LMM")
+            post_html = recent_image_div.get_attribute('outerHTML')
+            soup = BeautifulSoup(post_html, "lxml")
+            try:
+                image_alt = soup.find("div", class_="KL4Bh")
+                image_alt = image_alt.find("img").get("alt")
+                text = soup.find("div", class_="C4VMK")
+                text = text.select_one("h2 ~ span")
+                text = text.find_all("a")
+                for t in text:
+                    hashtag_list.append(t.text)
+                scraped = scraped + 1
+            except:
+                print("video post scraping failed.")
+                pass
+            next_btn.click()
+            time.sleep(1)
+
+    except:
+        print(f"{scraped} post scraped.")
+        pass
 
     return hashtag_list
 

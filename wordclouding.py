@@ -4,7 +4,7 @@ from PIL import Image
 import numpy
 from wordcloud import WordCloud, ImageColorGenerator
 
-mask = numpy.array(Image.open("watermark.jpg"))
+mask = numpy.array(Image.open("./masks/korea.png"))
 image_colors = ImageColorGenerator(mask)
 
 
